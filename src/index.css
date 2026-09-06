@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #0a0a0b;
+    color: #e2e2e2;
+  }
+}
+
+/* Elegant Dark utility classes */
+.bg-theme-canvas {
+  background-color: #0a0a0b;
+}
+
+.bg-theme-card {
+  background-color: #151518;
+}
+
+.bg-theme-darkest {
+  background-color: #050505;
+}
+
+.bg-theme-inner {
+  background-color: #0d0d0f;
+}
+
+.border-theme-subtle {
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.border-theme-muted {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.text-theme-primary {
+  color: #e2e2e2;
+}
+
+.text-theme-muted {
+  color: #888888;
+}
+
+.bg-radial-grid {
+  background-image: radial-gradient(#222 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Custom scrollbars for Elegant Dark */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232328;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #34343d;
+}

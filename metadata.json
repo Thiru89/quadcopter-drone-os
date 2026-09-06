@@ -1,0 +1,6 @@
+{
+  "name": "Drone Quadrapuller Operating System",
+  "description": "Enterprise autonomous quadrapuller UAV OS featuring real-time flight telemetry, automated stability control, encrypted command transmission, modular sensor plugins, predictive battery analytics, and mission log playback.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
