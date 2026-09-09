@@ -18,14 +18,15 @@ import {
   Key, 
   MapPin, 
   Bell,
-  Gauge
+  Gauge,
+  Code2
 } from 'lucide-react';
 import { FlightState, FlightMode } from '../types';
 
 interface HeaderProps {
   flightState: FlightState;
-  activeTab: 'cockpit' | 'map' | 'stability' | 'plugins' | 'battery' | 'crypto' | 'logs' | 'api';
-  setActiveTab: (tab: 'cockpit' | 'map' | 'stability' | 'plugins' | 'battery' | 'crypto' | 'logs' | 'api') => void;
+  activeTab: 'cockpit' | 'map' | 'stability' | 'plugins' | 'battery' | 'crypto' | 'logs' | 'api' | 'firmware';
+  setActiveTab: (tab: 'cockpit' | 'map' | 'stability' | 'plugins' | 'battery' | 'crypto' | 'logs' | 'api' | 'firmware') => void;
   onArmToggle: () => void;
   onEmergencyHover: () => void;
   onReturnToLaunch: () => void;
@@ -301,6 +302,19 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Key className="w-3.5 h-3.5" />
           Enterprise API Access
+        </button>
+
+        <button
+          id="nav-firmware"
+          onClick={() => setActiveTab('firmware')}
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] uppercase tracking-widest transition whitespace-nowrap ${
+            activeTab === 'firmware'
+              ? 'bg-sky-500 text-black font-bold shadow-[0_0_15px_rgba(14,165,233,0.3)]'
+              : 'text-white/60 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Code2 className="w-3.5 h-3.5" />
+          MCU Firmware & Flashing
         </button>
       </nav>
     </header>

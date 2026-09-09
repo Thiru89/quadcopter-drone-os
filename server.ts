@@ -1,5 +1,7 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
+import JSZip from 'jszip';
 import { createServer as createViteServer } from 'vite';
 
 const app = express();
@@ -646,6 +648,64 @@ app.post('/api/survey/compute-grid', (req, res) => {
       waypoints
     }
   });
+});
+
+// Helper to recursively collect files from directory
+function getFirmwareFilesRecursive(dir: string, baseDir: string = dir): Array<{ path: string; name: string; content: string }> {
+  let results: Array<{ path: string; name: string; content: string }> = [];
+  if (!fs.existsSync(dir)) return results;
+
+  const list = fs.readdirSync(dir);
+  for (const file of list) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(getFirmwareFilesRecursive(filePath, baseDir));
+    } else {
+      const relPath = path.relative(baseDir, filePath);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      results.push({ path: relPath, name: file, content });
+    }
+  }
+  return results;
+}
+
+// 7. Microcontroller Firmware API: Get all C/C++ firmware files
+app.get('/api/firmware/files', (req, res) => {
+  const firmwareDir = path.join(process.cwd(), 'firmware');
+  try {
+    const files = getFirmwareFilesRecursive(firmwareDir);
+    res.json({
+      version: '2.4.0',
+      targets: ['STM32H743VIT6', 'STM32F411CE', 'ESP32-S3'],
+      loopHz: 800,
+      protocol: 'DShot600',
+      filesCount: files.length,
+      files
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Failed to read firmware files' });
+  }
+});
+
+// 8. Microcontroller Firmware API: Download complete firmware as .ZIP package
+app.get('/api/firmware/download', async (req, res) => {
+  const firmwareDir = path.join(process.cwd(), 'firmware');
+  try {
+    const zip = new JSZip();
+    const files = getFirmwareFilesRecursive(firmwareDir);
+
+    for (const f of files) {
+      zip.file(f.path, f.content);
+    }
+
+    const zipBuffer = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="qpos-mcu-firmware-v2.4.0.zip"');
+    res.send(zipBuffer);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Failed to generate firmware zip package' });
+  }
 });
 
 // Vite Middleware for Dev / Static Serving for Production

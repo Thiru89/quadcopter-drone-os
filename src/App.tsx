@@ -9,6 +9,7 @@ import { EncryptedUplink } from './components/EncryptedUplink';
 import { MissionLogsPlayback } from './components/MissionLogsPlayback';
 import { ApiIntegration } from './components/ApiIntegration';
 import { DiagnosticsModal } from './components/DiagnosticsModal';
+import { FirmwareManager } from './components/FirmwareManager';
 
 import { 
   initialFlightState, 
@@ -35,7 +36,7 @@ export default function App() {
   const [missionLogs, setMissionLogs] = useState<MissionLog[]>([]);
   const [apiKeys, setApiKeys] = useState<ApiKeyRecord[]>([]);
 
-  const [activeTab, setActiveTab] = useState<'cockpit' | 'map' | 'stability' | 'plugins' | 'battery' | 'crypto' | 'logs' | 'api'>('cockpit');
+  const [activeTab, setActiveTab] = useState<'cockpit' | 'map' | 'stability' | 'plugins' | 'battery' | 'crypto' | 'logs' | 'api' | 'firmware'>('cockpit');
   const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState<boolean>(false);
   const [notificationToast, setNotificationToast] = useState<string | null>(null);
 
@@ -466,6 +467,10 @@ export default function App() {
             onGenerateKey={handleGenerateKey}
             onRevokeKey={handleRevokeKey}
           />
+        )}
+
+        {activeTab === 'firmware' && (
+          <FirmwareManager />
         )}
       </main>
 
